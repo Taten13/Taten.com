@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salayano - Movie Site</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #000; color: #fff; }
+        header { background-color: #111; padding: 1rem; text-align: center; }
+        .container { padding: 2rem; }
+        .movie-list { display: flex; flex-wrap: wrap; gap: 1rem; }
+        .movie-item { background-color: #222; border-radius: 8px; overflow: hidden; width: 200px; }
+        .movie-item img { width: 100%; height: auto; }
+        .movie-item h2 { font-size: 1.2rem; margin: 0.5rem; }
+        .movie-item p { font-size: 0.9rem; margin: 0.5rem; }
+        .movie-item .rating { font-size: 0.8rem; color: #f39c12; }
+        .login-signup, .profile-download-buttons { text-align: center; margin-bottom: 2rem; }
+        .login-signup button, .profile-download-buttons button, .admin-panel button { background-color: #444; border: none; border-radius: 5px; color: #fff; cursor: pointer; font-size: 1rem; margin: 0.5rem; padding: 0.5rem 1rem; }
+        .login-signup button:hover, .profile-download-buttons button:hover, .admin-panel button:hover { background-color: #666; }
+        .hidden { display: none; }
+        .form-container, .admin-dashboard { background-color: #222; color: #fff; padding: 2rem; border-radius: 8px; margin: 1rem auto; max-width: 400px; position: relative; }
+        .form-container input { width: calc(100% - 1rem); padding: 0.5rem; margin: 0.5rem 0; border: 1px solid #444; border-radius: 5px; color: #000; }
+        .form-container button { width: 100%; background-color: #444; border: none; border-radius: 5px; color: #fff; cursor: pointer; padding: 0.5rem; font-size: 1rem; }
+        .form-container button:hover { background-color: #666; }
+        .form-container .error { color: #f44336; font-size: 0.9rem; text-align: center; margin: 0.5rem 0; }
+        .exit-button { background-color: #f44336; border: none; border-radius: 5px; color: #fff; cursor: pointer; font-size: 0.9rem; padding: 0.5rem 1rem; position: absolute; top: 1rem; right: 1rem; }
+        .exit-button:hover { background-color: #d32f2f; }
+        footer { background-color: #111; padding: 1rem; text-align: center; }
+    </style>
+    <script>
+        let loggedIn = false;
+
+        function toggleSection(sectionId) {
+            document.querySelectorAll('.hidden').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function hideSection(sectionId) {
+            document.getElementById(sectionId).classList.add('hidden');
+        }
+
+        function handleSignUp() {
+            // Simulate successful sign-up and show login section
+            hideSection('signup-section');
+            toggleSection('login-section');
+        }
+
+        function handleLogin() {
+            // Simulate successful login
+            loggedIn = true;
+            hideSection('login-section');
+            hideSection('signup-section');
+            document.querySelector('.movie-interface').classList.remove('hidden');
+            document.querySelector('.profile-download-buttons').classList.remove('hidden');
+            document.querySelector('.login-signup').classList.add('hidden');
+        }
+
+        function handleAdminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            if (username === 'admin' && password === 'admin123') {
+                hideSection('admin-login');
+                document.getElementById('admin-panel').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-error').textContent = 'Invalid admin credentials.';
+            }
+        }
+
+        function handleAddMovie() {
+            const movieTitle = document.getElementById('movie-title').value;
+            const movieDescription = document.getElementById('movie-description').value;
+            const movieFile = document.getElementById('movie-file').files[0];
+
+            if (movieTitle && movieDescription && movieFile) {
+                const movieList = document.getElementById('movie-list');
+                const newMovieItem = document.createElement('div');
+                newMovieItem.className = 'movie-item';
+
+                const fileURL = URL.createObjectURL(movieFile);
+                newMovieItem.innerHTML = `
+                    <img src="${fileURL}" alt="${movieTitle}">
+                    <h2>${movieTitle}</h2>
+                    <p>${movieDescription}</p>
+                    <p class="rating">Rating: ★★★★☆</p>
+                    <button onclick="alert('Downloading ${movieTitle}')">Download</button>
+                `;
+
+                movieList.appendChild(newMovieItem);
+                hideSection('admin-panel');
+            } else {
+                alert('Please fill out all fields and select a movie file.');
+            }
+        }
+
+        function handleDeleteMovie() {
+            const deleteFile = document.getElementById('delete-file').files[0];
+            if (deleteFile) {
+                alert(`Deleted movie: ${deleteFile.name}`);
+                // Replace with actual file deletion logic
+            } else {
+                alert('Please select a movie file to delete.');
+            }
+        }
+
+        function handleLogout() {
+            loggedIn = false;
+            document.querySelector('.movie-interface').classList.add('hidden');
+            document.querySelector('.profile-download-buttons').classList.add('hidden');
+            document.querySelector('.login-signup').classList.remove('hidden');
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Salayano</h1>
+        <p>Your go-to movie site</p>
+    </header>
+
+    <div class="login-signup">
+        <button onclick="toggleSection('login-section')">Login</button>
+        <button onclick="toggleSection('signup-section')">Sign Up</button>
+        <button onclick="toggleSection('admin-login')">Admin Login</button>
+    </div>
+
+    <div id="login-section" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('login-section')">Exit</button>
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="handleLogin()">Login</button>
+    </div>
+
+    <div id="signup-section" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('signup-section')">Exit</button>
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-username" placeholder="Username" required>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <div id="signup-error" class="error"></div>
+        <button onclick="handleSignUp()">Sign Up</button>
+    </div>
+
+    <div id="admin-login" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('admin-login')">Exit</button>
+        <h2>Admin Login</h2>
+        <input type="text" id="admin-username" placeholder="Admin Username" required>
+        <input type="password" id="admin-password" placeholder="Admin Password" required>
+        <div id="admin-error" class="error"></div>
+        <button onclick="handleAdminLogin()">Login</button>
+    </div>
+
+    <div class="profile-download-buttons hidden">
+        <button onclick="toggleSection('profile-section')">Profile</button>
+        <button onclick="toggleSection('downloads-section')">Downloads</button>
+    </div>
+
+    <div class="movie-interface hidden container">
+        <h2>Featured Movies</h2>
+        <div id="movie-list" class="movie-list">
+            <!-- Movies will be dynamically added here -->
+        </div>
+    </div>
+
+    <div id="profile-section" class="hidden profile-download">
+        <button class="exit-button" onclick="hideSection('profile-section')">Exit</button>
+        <h2>Profile</h2>
+        <p>Username: <span id="profile-username">User</span></p>
+        <input type="password" id="new-password" placeholder="New Password">
+        <button onclick="alert('Password changed')">Change Password</button>
+        <button onclick="handleLogout()">Logout</button>
+    </div>
+
+    <div id="downloads-section" class="hidden profile-download">
+        <button class="exit-button" onclick="hideSection('downloads-section')">Exit</button>
+        <h2>Downloads</h2>
+        <p>Here are your downloaded movies:</p>
+        <!-- Simulated downloads list -->
+        <ul>
+            <li>Movie Title 1</li>
+            <li>Movie Title 2</li>
+        </ul>
+    </div>
+
+    <div id="admin-panel" class="hidden admin-dashboard">
+        <button class="exit-button" onclick="hideSection('admin-panel')">Exit</button>
+        <h2>Admin Dashboard</h2>
+        <h3>Add Movie</h3>
+        <input type="text" id="movie-title" placeholder="Movie Title" required>
+        <input type="text" id="movie-description" placeholder="Movie Description" required>
+        <input type="file" id="movie-file" accept="image/*,video/*" required>
+        <button onclick="handleAddMovie()">Add Movie</button>
+        <h3>Delete Movie</h3>
+        <input type="file" id="delete-file" accept="image/*,video/*" required>
+        <button onclick="handleDeleteMovie()">Delete Movie</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Salayano. All rights reserved.</p>
+    </footer>
+</body>
+</html>
