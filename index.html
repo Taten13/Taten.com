@@ -10,7 +10,7 @@
         .container { padding: 2rem; }
         .movie-list { display: flex; flex-wrap: wrap; gap: 1rem; }
         .movie-item { background-color: #222; border-radius: 8px; overflow: hidden; width: 200px; }
-        .movie-item img { width: 100%; height: auto; }
+        .movie-item img, .movie-item video { width: 100%; height: auto; }
         .movie-item h2 { font-size: 1.2rem; margin: 0.5rem; }
         .movie-item p { font-size: 0.9rem; margin: 0.5rem; }
         .movie-item .rating { font-size: 0.8rem; color: #f39c12; }
@@ -40,13 +40,11 @@
         }
 
         function handleSignUp() {
-            // Simulate successful sign-up and show login section
             hideSection('signup-section');
             toggleSection('login-section');
         }
 
         function handleLogin() {
-            // Simulate successful login
             loggedIn = true;
             hideSection('login-section');
             hideSection('signup-section');
@@ -77,8 +75,9 @@
                 newMovieItem.className = 'movie-item';
 
                 const fileURL = URL.createObjectURL(movieFile);
+                const fileType = movieFile.type.startsWith('image/') ? 'img' : 'video';
                 newMovieItem.innerHTML = `
-                    <img src="${fileURL}" alt="${movieTitle}">
+                    <${fileType} src="${fileURL}" alt="${movieTitle}"></${fileType}>
                     <h2>${movieTitle}</h2>
                     <p>${movieDescription}</p>
                     <p class="rating">Rating: ★★★★☆</p>
