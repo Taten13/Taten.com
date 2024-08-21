@@ -10,7 +10,7 @@
         .container { padding: 2rem; }
         .movie-list { display: flex; flex-wrap: wrap; gap: 1rem; }
         .movie-item { background-color: #222; border-radius: 8px; overflow: hidden; width: 200px; }
-        .movie-item img { width: 100%; height: auto; }
+        .movie-item video { width: 100%; height: auto; }
         .movie-item h2 { font-size: 1.2rem; margin: 0.5rem; }
         .movie-item p { font-size: 0.9rem; margin: 0.5rem; }
         .movie-item .rating { font-size: 0.8rem; color: #f39c12; }
@@ -34,6 +34,7 @@
                 document.querySelector('.movie-interface').classList.remove('hidden');
                 document.querySelector('.profile-download-buttons').classList.remove('hidden');
                 document.querySelector('.login-signup').classList.add('hidden');
+                displayMovies(); // Show saved movies
             }
         });
 
@@ -52,12 +53,18 @@
         }
 
         function handleLogin() {
-            localStorage.setItem('loggedIn', 'true');
-            hideSection('login-section');
-            hideSection('signup-section');
-            document.querySelector('.movie-interface').classList.remove('hidden');
-            document.querySelector('.profile-download-buttons').classList.remove('hidden');
-            document.querySelector('.login-signup').classList.add('hidden');
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            if (username && password) {
+                localStorage.setItem('loggedIn', 'true');
+                hideSection('login-section');
+                hideSection('signup-section');
+                document.querySelector('.movie-interface').classList.remove('hidden');
+                document.querySelector('.profile-download-buttons').classList.remove('hidden');
+                document.querySelector('.login-signup').classList.add('hidden');
+            } else {
+                alert('Please enter both username and password.');
+            }
         }
 
         function handleAdminLogin() {
@@ -77,24 +84,39 @@
             const movieFile = document.getElementById('movie-file').files[0];
 
             if (movieTitle && movieDescription && movieFile) {
-                const movieList = document.getElementById('movie-list');
+                const fileURL = URL.createObjectURL(movieFile);
+
+                // Create a movie object and save it to localStorage
+                const movie = { title: movieTitle, description: movieDescription, fileURL };
+                const movies = JSON.parse(localStorage.getItem('movies')) || [];
+                movies.push(movie);
+                localStorage.setItem('movies', JSON.stringify(movies));
+
+                displayMovies();
+                hideSection('admin-panel');
+            } else {
+                alert('Please fill out all fields and select a video file.');
+            }
+        }
+
+        function displayMovies() {
+            const movieList = document.getElementById('movie-list');
+            movieList.innerHTML = ''; // Clear existing movies
+            const movies = JSON.parse(localStorage.getItem('movies')) || [];
+            
+            movies.forEach(movie => {
                 const newMovieItem = document.createElement('div');
                 newMovieItem.className = 'movie-item';
 
-                const fileURL = URL.createObjectURL(movieFile);
                 newMovieItem.innerHTML = `
-                    <img src="${fileURL}" alt="${movieTitle}">
-                    <h2>${movieTitle}</h2>
-                    <p>${movieDescription}</p>
+                    <video controls src="${movie.fileURL}" style="width: 100%; height: auto;"></video>
+                    <h2>${movie.title}</h2>
+                    <p>${movie.description}</p>
                     <p class="rating">Rating: ★★★★☆</p>
-                    <button onclick="alert('Downloading ${movieTitle}')">Download</button>
+                    <button onclick="alert('Downloading ${movie.title}')">Download</button>
                 `;
-
                 movieList.appendChild(newMovieItem);
-                hideSection('admin-panel');
-            } else {
-                alert('Please fill out all fields and select an image file.');
-            }
+            });
         }
 
         function handleDeleteMovie() {
@@ -110,6 +132,7 @@
 
         function handleLogout() {
             localStorage.removeItem('loggedIn');
+            localStorage.removeItem('movies'); // Clear saved movies on logout
             document.querySelector('.movie-interface').classList.add('hidden');
             document.querySelector('.profile-download-buttons').classList.add('hidden');
             document.querySelector('.login-signup').classList.remove('hidden');
@@ -193,10 +216,10 @@
         <h3>Add Movie</h3>
         <input type="text" id="movie-title" placeholder="Movie Title" required>
         <input type="text" id="movie-description" placeholder="Movie Description" required>
-        <input type="file" id="movie-file" accept="image/*" required>
+        <input type="file" id="movie-file" accept="video/*" required>
         <button onclick="handleAddMovie()">Add Movie</button>
         <h3>Delete Movie</h3>
-        <input type="file" id="delete-file" accept="image/*" required>
+        <input type="file" id="delete-file" accept="video/*" required>
         <button onclick="handleDeleteMovie()">Delete Movie</button>
     </div>
 
