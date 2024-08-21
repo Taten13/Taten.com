@@ -28,7 +28,6 @@
         footer { background-color: #111; padding: 1rem; text-align: center; }
     </style>
     <script>
-        // Check login status on page load
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('loggedIn') === 'true') {
                 document.querySelector('.movie-interface').classList.remove('hidden');
@@ -62,6 +61,7 @@
                 document.querySelector('.movie-interface').classList.remove('hidden');
                 document.querySelector('.profile-download-buttons').classList.remove('hidden');
                 document.querySelector('.login-signup').classList.add('hidden');
+                displayMovies(); // Show saved movies
             } else {
                 alert('Please enter both username and password.');
             }
