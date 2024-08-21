@@ -27,6 +27,95 @@
         .exit-button:hover { background-color: #d32f2f; }
         footer { background-color: #111; padding: 1rem; text-align: center; }
     </style>
+</head>
+<body>
+    <header>
+        <h1>Salayano</h1>
+        <p>Your go-to movie site</p>
+    </header>
+
+    <div class="login-signup">
+        <button onclick="toggleSection('login-section')">Login</button>
+        <button onclick="toggleSection('signup-section')">Sign Up</button>
+        <button onclick="toggleSection('admin-login')">Admin Login</button>
+    </div>
+
+    <div id="login-section" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('login-section')">Exit</button>
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="handleLogin()">Login</button>
+    </div>
+
+    <div id="signup-section" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('signup-section')">Exit</button>
+        <h2>Sign Up</h2>
+        <input type="text" id="signup-username" placeholder="Username" required>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <div id="signup-error" class="error"></div>
+        <button onclick="handleSignUp()">Sign Up</button>
+    </div>
+
+    <div id="admin-login" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('admin-login')">Exit</button>
+        <h2>Admin Login</h2>
+        <input type="text" id="admin-username" placeholder="Admin Username" required>
+        <input type="password" id="admin-password" placeholder="Admin Password" required>
+        <div id="admin-error" class="error"></div>
+        <button onclick="handleAdminLogin()">Login</button>
+    </div>
+
+    <div class="profile-download-buttons hidden">
+        <button onclick="toggleSection('profile-section')">Profile</button>
+        <button onclick="toggleSection('downloads-section')">Downloads</button>
+    </div>
+
+    <div class="movie-interface hidden container">
+        <h2>Featured Movies</h2>
+        <div id="movie-list" class="movie-list">
+            <!-- Movies will be dynamically added here -->
+        </div>
+    </div>
+
+    <div id="profile-section" class="hidden form-container">
+        <button class="exit-button" onclick="hideSection('profile-section')">Exit</button>
+        <h2>Profile</h2>
+        <p>Username: <span id="profile-username">User</span></p>
+        <input type="password" id="new-password" placeholder="New Password">
+        <button onclick="alert('Password changed')">Change Password</button>
+        <button onclick="handleLogout()">Logout</button>
+    </div>
+
+    <div id="downloads-section" class="hidden container">
+        <button class="exit-button" onclick="hideSection('downloads-section')">Exit</button>
+        <h2>Downloads</h2>
+        <p>Here are your downloaded movies:</p>
+        <!-- Simulated downloads list -->
+        <ul>
+            <li>Movie Title 1</li>
+            <li>Movie Title 2</li>
+        </ul>
+    </div>
+
+    <div id="admin-panel" class="hidden admin-dashboard">
+        <button class="exit-button" onclick="hideSection('admin-panel')">Exit</button>
+        <h2>Admin Dashboard</h2>
+        <h3>Add Movie</h3>
+        <input type="text" id="movie-title" placeholder="Movie Title" required>
+        <input type="text" id="movie-description" placeholder="Movie Description" required>
+        <input type="file" id="movie-file" accept="video/*" required>
+        <button onclick="handleAddMovie()">Add Movie</button>
+        <h3>Delete Movie</h3>
+        <input type="file" id="delete-file" accept="video/*" required>
+        <button onclick="handleDeleteMovie()">Delete Movie</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Salayano. All rights reserved.</p>
+    </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem('loggedIn') === 'true') {
@@ -120,7 +209,6 @@
         }
 
         function handleDeleteMovie() {
-            // Deleting a movie is not implemented here as it would require server-side support
             const deleteFile = document.getElementById('delete-file').files[0];
             if (deleteFile) {
                 alert(`Deleted movie: ${deleteFile.name}`);
@@ -138,93 +226,5 @@
             document.querySelector('.login-signup').classList.remove('hidden');
         }
     </script>
-</head>
-<body>
-    <header>
-        <h1>Salayano</h1>
-        <p>Your go-to movie site</p>
-    </header>
-
-    <div class="login-signup">
-        <button onclick="toggleSection('login-section')">Login</button>
-        <button onclick="toggleSection('signup-section')">Sign Up</button>
-        <button onclick="toggleSection('admin-login')">Admin Login</button>
-    </div>
-
-    <div id="login-section" class="hidden form-container">
-        <button class="exit-button" onclick="hideSection('login-section')">Exit</button>
-        <h2>Login</h2>
-        <input type="text" id="login-username" placeholder="Username" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button onclick="handleLogin()">Login</button>
-    </div>
-
-    <div id="signup-section" class="hidden form-container">
-        <button class="exit-button" onclick="hideSection('signup-section')">Exit</button>
-        <h2>Sign Up</h2>
-        <input type="text" id="signup-username" placeholder="Username" required>
-        <input type="email" id="signup-email" placeholder="Email" required>
-        <input type="password" id="signup-password" placeholder="Password" required>
-        <div id="signup-error" class="error"></div>
-        <button onclick="handleSignUp()">Sign Up</button>
-    </div>
-
-    <div id="admin-login" class="hidden form-container">
-        <button class="exit-button" onclick="hideSection('admin-login')">Exit</button>
-        <h2>Admin Login</h2>
-        <input type="text" id="admin-username" placeholder="Admin Username" required>
-        <input type="password" id="admin-password" placeholder="Admin Password" required>
-        <div id="admin-error" class="error"></div>
-        <button onclick="handleAdminLogin()">Login</button>
-    </div>
-
-    <div class="profile-download-buttons hidden">
-        <button onclick="toggleSection('profile-section')">Profile</button>
-        <button onclick="toggleSection('downloads-section')">Downloads</button>
-    </div>
-
-    <div class="movie-interface hidden container">
-        <h2>Featured Movies</h2>
-        <div id="movie-list" class="movie-list">
-            <!-- Movies will be dynamically added here -->
-        </div>
-    </div>
-
-    <div id="profile-section" class="hidden profile-download">
-        <button class="exit-button" onclick="hideSection('profile-section')">Exit</button>
-        <h2>Profile</h2>
-        <p>Username: <span id="profile-username">User</span></p>
-        <input type="password" id="new-password" placeholder="New Password">
-        <button onclick="alert('Password changed')">Change Password</button>
-        <button onclick="handleLogout()">Logout</button>
-    </div>
-
-    <div id="downloads-section" class="hidden profile-download">
-        <button class="exit-button" onclick="hideSection('downloads-section')">Exit</button>
-        <h2>Downloads</h2>
-        <p>Here are your downloaded movies:</p>
-        <!-- Simulated downloads list -->
-        <ul>
-            <li>Movie Title 1</li>
-            <li>Movie Title 2</li>
-        </ul>
-    </div>
-
-    <div id="admin-panel" class="hidden admin-dashboard">
-        <button class="exit-button" onclick="hideSection('admin-panel')">Exit</button>
-        <h2>Admin Dashboard</h2>
-        <h3>Add Movie</h3>
-        <input type="text" id="movie-title" placeholder="Movie Title" required>
-        <input type="text" id="movie-description" placeholder="Movie Description" required>
-        <input type="file" id="movie-file" accept="video/*" required>
-        <button onclick="handleAddMovie()">Add Movie</button>
-        <h3>Delete Movie</h3>
-        <input type="file" id="delete-file" accept="video/*" required>
-        <button onclick="handleDeleteMovie()">Delete Movie</button>
-    </div>
-
-    <footer>
-        <p>&copy; 2024 Salayano. All rights reserved.</p>
-    </footer>
 </body>
 </html>
