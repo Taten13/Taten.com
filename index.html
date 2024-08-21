@@ -22,20 +22,11 @@
 </head>
 
 <body class="body">
-    <div class="selladd-container">
-        <div class="selladd">This website just got Updated🎉. Checkout the New Verison here <a class="vercelLInk"
-                href="https://cinemaa.vercel.app/">www.cinemaa.vercel.app</a>
-        </div>
-    </div>
-
     <main class="main">
-
-
         <div class="overlay"></div>
         <div class="overlay_side_navabar"></div>
         <div class="sidenav_container">
             <nav class="sidenav">
-
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#ffff"
                     class="arrow_left bi-arrow-left" viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
@@ -98,99 +89,57 @@
                         <path class="pathh" fill-rule="evenodd"
                             d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
                     </svg>
-                    <input class="search" type="text" placeholder="Search " />
-                    <div class="light_darkmode" data-theme="black"></div>
+                    <a href="./index.html" class="navLink">
+                        <h3 class="navTitle">CINEMAA</h3>
+                    </a>
+                    <div class="searchBar">
+                        <input class="searchBar_input" placeholder="Search" />
+                    </div>
+                    <div class="navlinks">
+                        <a href="./index.html" class="navlinks_anchor">Home</a>
+                        <a href="./moviesGenre.html" class="navlinks_anchor">Movies</a>
+                        <a href="./tvShows.html" class="navlinks_anchor">Shows</a>
+                        <a href="./About.html" class="navlinks_anchor">About</a>
+                    </div>
                 </nav>
             </div>
-            <section class="section_two">
-                <!-- <h3 class="home_header">Home</h3> -->
-                <div class="Home_header_container">
-
-                    <div class="trending_container">
-                        <div class="Trending_arrow_container">
-                            <?xml version="1.0" ?>
-                            <!DOCTYPE svg
-                                PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg
-                                class="trending_arrow trending_left_btn" height="512px" id="Layer_1"
-                                style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512"
-                                xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <polygon points="352,115.4 331.3,96 160,256 331.3,416 352,396.7 201.5,256 " />
-                            </svg>
-                            <?xml version="1.0" ?>
-                            <!DOCTYPE svg
-                                PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg
-                                class="trending_arrow trending_right_btn" height="512px" id="Layer_1"
-                                style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512"
-                                xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <polygon points="160,115.4 180.7,96 352,256 180.7,416 160,396.7 310.5,256 " />
-                            </svg>
-
-                        </div>
-
-                        <div class="trending_poster trending_div_container">
-
+            <div class="main_section_one">
+                <div class="image_container">
+                    <img src="./resources/image/banner.png" class="img" />
+                    <div class="overlay_img_text">
+                        <h3 class="overlay_text">
+                            <span> Welcome to CINEMAA</span>
+                            <br />
+                            <span>Find Your Favorite Movies and TV Shows</span>
+                        </h3>
+                    </div>
+                </div>
+                <div class="content_section">
+                    <div class="section_two">
+                        <div class="section_two_container">
+                            <h3 class="title_section_two">Popular Movies</h3>
+                            <div class="movies_container">
+                                <!-- Movie Cards Here -->
+                            </div>
                         </div>
                     </div>
-
+                    <div class="section_three">
+                        <div class="section_three_container">
+                            <h3 class="title_section_three">Popular Shows</h3>
+                            <div class="shows_container">
+                                <!-- Show Cards Here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <section class="Now_playing_movies_container Now_playing_movies_container_trend" id="nowplaying">
-                    <h4 class="Now_playing_movies_container_title">
-                        Now Playing Movies
-                    </h4>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="leftarrow arrowbtn bi-chevron-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="rightarrow rightarrowindex arrowbtn bi-chevron-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                    <div class="Now_playing_movies_div"></div>
-                </section>
-                <section class="Now_playing_movies_container" id="Trendingmovies">
-                    <h4 class="Now_playing_movies_container_title">Trending Movies</h4>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="leftarrow arrowbtn bi-chevron-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="rightarrow rightarrowindex arrowbtn bi-chevron-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                    <div class="current_popular_movies_div"></div>
-                </section>
-                <section class="Now_playing_movies_container" id="toprated">
-                    <h4 class="Now_playing_movies_container_title">Top Rated Movies</h4>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="leftarrow arrowbtn bi-chevron-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="rightarrow rightarrowindex arrowbtn bi-chevron-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                    <div class="Top_rated_movies_div"></div>
-                </section>
-            </section>
+            </div>
         </section>
+        <footer class="footer">
+            <div class="footer_container">
+                <p>&copy; 2024 CINEMAA. All rights reserved.</p>
+            </div>
+        </footer>
     </main>
-
-    <script src="./scriptl.js"></script>
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
-        data-id="immdipu" data-description="Support me on Buy me a coffee!"
-        data-message="Thank you for visiting. You can now buy me a coffee." data-color="#5F7FFF" data-position="Right"
-        data-x_margin="18" data-y_margin="18"></script>
 </body>
 
 </html>
