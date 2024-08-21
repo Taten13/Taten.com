@@ -26,126 +26,37 @@
         .exit-button { background-color: #f44336; border: none; border-radius: 5px; color: #fff; cursor: pointer; font-size: 0.9rem; padding: 0.5rem 1rem; position: absolute; top: 1rem; right: 1rem; }
         .exit-button:hover { background-color: #d32f2f; }
         footer { background-color: #111; padding: 1rem; text-align: center; }
+
+        /* Toast container */
+        .toast-container {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            display: none;
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .toast.show {
+            display: block;
+            animation: fadeInOut 4s;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('loggedIn') === 'true') {
-                document.querySelector('.movie-interface').classList.remove('hidden');
-                document.querySelector('.profile-download-buttons').classList.remove('hidden');
-                document.querySelector('.login-signup').classList.add('hidden');
-                displayMovies(); // Show saved movies
-            }
-        });
-
-        function toggleSection(sectionId) {
-            document.querySelectorAll('.hidden').forEach(section => section.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
-        }
-
-        function hideSection(sectionId) {
-            document.getElementById(sectionId).classList.add('hidden');
-        }
-
-        function handleSignUp() {
-            hideSection('signup-section');
-            toggleSection('login-section');
-        }
-
-        function handleLogin() {
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            if (username && password) {
-                // Basic validation example
-                const validUsers = JSON.parse(localStorage.getItem('users')) || [];
-                const user = validUsers.find(user => user.username === username && user.password === password);
-
-                if (user) {
-                    localStorage.setItem('loggedIn', 'true');
-                    hideSection('login-section');
-                    hideSection('signup-section');
-                    document.querySelector('.movie-interface').classList.remove('hidden');
-                    document.querySelector('.profile-download-buttons').classList.remove('hidden');
-                    document.querySelector('.login-signup').classList.add('hidden');
-                    displayMovies(); // Show saved movies
-                } else {
-                    alert('Invalid username or password.');
-                }
-            } else {
-                alert('Please enter both username and password.');
-            }
-        }
-
-        function handleAdminLogin() {
-            const username = document.getElementById('admin-username').value;
-            const password = document.getElementById('admin-password').value;
-            if (username === 'admin' && password === 'admin123') {
-                hideSection('admin-login');
-                document.getElementById('admin-panel').classList.remove('hidden');
-            } else {
-                document.getElementById('admin-error').textContent = 'Invalid admin credentials.';
-            }
-        }
-
-        function handleAddMovie() {
-            const movieTitle = document.getElementById('movie-title').value;
-            const movieDescription = document.getElementById('movie-description').value;
-            const movieFile = document.getElementById('movie-file').files[0];
-
-            if (movieTitle && movieDescription && movieFile) {
-                const fileURL = URL.createObjectURL(movieFile);
-
-                // Create a movie object and save it to localStorage
-                const movie = { title: movieTitle, description: movieDescription, fileURL };
-                const movies = JSON.parse(localStorage.getItem('movies')) || [];
-                movies.push(movie);
-                localStorage.setItem('movies', JSON.stringify(movies));
-
-                displayMovies();
-                hideSection('admin-panel');
-            } else {
-                alert('Please fill out all fields and select a video file.');
-            }
-        }
-
-        function displayMovies() {
-            const movieList = document.getElementById('movie-list');
-            movieList.innerHTML = ''; // Clear existing movies
-            const movies = JSON.parse(localStorage.getItem('movies')) || [];
-            
-            movies.forEach(movie => {
-                const newMovieItem = document.createElement('div');
-                newMovieItem.className = 'movie-item';
-
-                newMovieItem.innerHTML = `
-                    <video controls src="${movie.fileURL}" style="width: 100%; height: auto;"></video>
-                    <h2>${movie.title}</h2>
-                    <p>${movie.description}</p>
-                    <p class="rating">Rating: ★★★★☆</p>
-                    <button onclick="alert('Downloading ${movie.title}')">Download</button>
-                `;
-                movieList.appendChild(newMovieItem);
-            });
-        }
-
-        function handleDeleteMovie() {
-            const deleteFile = document.getElementById('delete-file').files[0];
-            if (deleteFile) {
-                alert(`Deleted movie: ${deleteFile.name}`);
-                // Replace with actual file deletion logic
-            } else {
-                alert('Please select a movie file to delete.');
-            }
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('loggedIn');
-            localStorage.removeItem('movies'); // Clear saved movies on logout
-            document.querySelector('.movie-interface').classList.add('hidden');
-            document.querySelector('.profile-download-buttons').classList.add('hidden');
-            document.querySelector('.login-signup').classList.remove('hidden');
-        }
-    </script>
 </head>
 <body>
     <header>
@@ -231,8 +142,135 @@
         <button onclick="handleDeleteMovie()">Delete Movie</button>
     </div>
 
+    <div id="toast-container" class="toast-container">
+        <div id="toast" class="toast"></div>
+    </div>
+
     <footer>
         <p>&copy; 2024 Salayano. All rights reserved.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('loggedIn') === 'true') {
+                document.querySelector('.movie-interface').classList.remove('hidden');
+                document.querySelector('.profile-download-buttons').classList.remove('hidden');
+                document.querySelector('.login-signup').classList.add('hidden');
+                displayMovies(); // Show saved movies
+            }
+        });
+
+        function toggleSection(sectionId) {
+            document.querySelectorAll('.hidden').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function hideSection(sectionId) {
+            document.getElementById(sectionId).classList.add('hidden');
+        }
+
+        function handleSignUp() {
+            hideSection('signup-section');
+            toggleSection('login-section');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        function handleLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            if (username && password) {
+                if (username === 'admin' && password === 'admin123') {
+                    localStorage.setItem('loggedIn', 'true');
+                    hideSection('login-section');
+                    hideSection('signup-section');
+                    document.querySelector('.movie-interface').classList.remove('hidden');
+                    document.querySelector('.profile-download-buttons').classList.remove('hidden');
+                    document.querySelector('.login-signup').classList.add('hidden');
+                    displayMovies(); // Show saved movies
+                } else {
+                    showToast('Namali galing ka migo');
+                }
+            } else {
+                showToast('Please enter both username and password.');
+            }
+        }
+
+        function handleAdminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            if (username === 'admin' && password === 'admin123') {
+                hideSection('admin-login');
+                document.getElementById('admin-panel').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-error').textContent = 'Invalid admin credentials.';
+            }
+        }
+
+        function handleAddMovie() {
+            const movieTitle = document.getElementById('movie-title').value;
+            const movieDescription = document.getElementById('movie-description').value;
+            const movieFile = document.getElementById('movie-file').files[0];
+
+            if (movieTitle && movieDescription && movieFile) {
+                const fileURL = URL.createObjectURL(movieFile);
+
+                // Create a movie object and save it to localStorage
+                const movie = { title: movieTitle, description: movieDescription, fileURL };
+                const movies = JSON.parse(localStorage.getItem('movies')) || [];
+                movies.push(movie);
+                localStorage.setItem('movies', JSON.stringify(movies));
+
+                displayMovies();
+                hideSection('admin-panel');
+            } else {
+                alert('Please fill out all fields and select a video file.');
+            }
+        }
+
+        function displayMovies() {
+            const movieList = document.getElementById('movie-list');
+            movieList.innerHTML = ''; // Clear existing movies
+            const movies = JSON.parse(localStorage.getItem('movies')) || [];
+            
+            movies.forEach(movie => {
+                const newMovieItem = document.createElement('div');
+                newMovieItem.className = 'movie-item';
+
+                newMovieItem.innerHTML = `
+                    <video controls src="${movie.fileURL}" style="width: 100%; height: auto;"></video>
+                    <h2>${movie.title}</h2>
+                    <p>${movie.description}</p>
+                    <p class="rating">Rating: ★★★★☆</p>
+                    <button onclick="alert('Downloading ${movie.title}')">Download</button>
+                `;
+                movieList.appendChild(newMovieItem);
+            });
+        }
+
+        function handleDeleteMovie() {
+            // Deleting a movie is not implemented here as it would require server-side support
+            const deleteFile = document.getElementById('delete-file').files[0];
+            if (deleteFile) {
+                alert(`Deleted movie: ${deleteFile.name}`);
+                // Replace with actual file deletion logic
+            } else {
+                alert('Please select a movie file to delete.');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('loggedIn');
+            localStorage.removeItem('movies'); // Clear saved movies on logout
+            document.querySelector('.movie-interface').classList.add('hidden');
+            document.querySelector('.profile-download-buttons').classList.add('hidden');
+            document.querySelector('.login-signup').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
