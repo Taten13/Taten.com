@@ -142,8 +142,8 @@
         <button onclick="handleDeleteMovie()">Delete Movie</button>
     </div>
 
-    <div id="toast-container" class="toast-container">
-        <div id="toast" class="toast"></div>
+    <div id="toast" class="toast-container">
+        <div class="toast" id="toast-message"></div>
     </div>
 
     <footer>
@@ -161,115 +161,132 @@
         });
 
         function toggleSection(sectionId) {
-            document.querySelectorAll('.hidden').forEach(section => section.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
+            document.querySelectorAll('.form-container, .admin-dashboard').forEach(el => el.classList.add('hidden'));
+            document.querySelector(`#${sectionId}`).classList.toggle('hidden');
         }
 
         function hideSection(sectionId) {
-            document.getElementById(sectionId).classList.add('hidden');
-        }
-
-        function handleSignUp() {
-            hideSection('signup-section');
-            toggleSection('login-section');
+            document.querySelector(`#${sectionId}`).classList.add('hidden');
         }
 
         function showToast(message) {
-            const toast = document.getElementById('toast');
+            const toast = document.getElementById('toast-message');
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
+        function handleSignUp() {
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const error = document.getElementById('signup-error');
+
+            if (username && email && password) {
+                // Save user data in localStorage
+                localStorage.setItem('username', username);
+                localStorage.setItem('email', email);
+                localStorage.setItem('password', password);
+                showToast('Signup successful! You can now log in.');
+                hideSection('signup-section');
+            } else {
+                error.textContent = 'Please fill out all fields.';
+            }
+        }
+
         function handleLogin() {
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
-            if (username && password) {
-                if (username === 'admin' && password === 'admin123') {
-                    localStorage.setItem('loggedIn', 'true');
-                    hideSection('login-section');
-                    hideSection('signup-section');
-                    document.querySelector('.movie-interface').classList.remove('hidden');
-                    document.querySelector('.profile-download-buttons').classList.remove('hidden');
-                    document.querySelector('.login-signup').classList.add('hidden');
-                    displayMovies(); // Show saved movies
-                } else {
-                    showToast('Namali galing ka migo');
-                }
+
+            const storedUsername = localStorage.getItem('username');
+            const storedPassword = localStorage.getItem('password');
+
+            if (username === storedUsername && password === storedPassword) {
+                localStorage.setItem('loggedIn', 'true');
+                document.querySelector('.movie-interface').classList.remove('hidden');
+                document.querySelector('.profile-download-buttons').classList.remove('hidden');
+                document.querySelector('.login-signup').classList.add('hidden');
+                showToast('Login successful!');
             } else {
-                showToast('Please enter both username and password.');
-            }
-        }
-
-        function handleAdminLogin() {
-            const username = document.getElementById('admin-username').value;
-            const password = document.getElementById('admin-password').value;
-            if (username === 'admin' && password === 'admin123') {
-                hideSection('admin-login');
-                document.getElementById('admin-panel').classList.remove('hidden');
-            } else {
-                document.getElementById('admin-error').textContent = 'Invalid admin credentials.';
-            }
-        }
-
-        function handleAddMovie() {
-            const movieTitle = document.getElementById('movie-title').value;
-            const movieDescription = document.getElementById('movie-description').value;
-            const movieFile = document.getElementById('movie-file').files[0];
-
-            if (movieTitle && movieDescription && movieFile) {
-                const fileURL = URL.createObjectURL(movieFile);
-
-                // Create a movie object and save it to localStorage
-                const movie = { title: movieTitle, description: movieDescription, fileURL };
-                const movies = JSON.parse(localStorage.getItem('movies')) || [];
-                movies.push(movie);
-                localStorage.setItem('movies', JSON.stringify(movies));
-
-                displayMovies();
-                hideSection('admin-panel');
-            } else {
-                alert('Please fill out all fields and select a video file.');
-            }
-        }
-
-        function displayMovies() {
-            const movieList = document.getElementById('movie-list');
-            movieList.innerHTML = ''; // Clear existing movies
-            const movies = JSON.parse(localStorage.getItem('movies')) || [];
-            
-            movies.forEach(movie => {
-                const newMovieItem = document.createElement('div');
-                newMovieItem.className = 'movie-item';
-
-                newMovieItem.innerHTML = `
-                    <video controls src="${movie.fileURL}" style="width: 100%; height: auto;"></video>
-                    <h2>${movie.title}</h2>
-                    <p>${movie.description}</p>
-                    <p class="rating">Rating: ★★★★☆</p>
-                    <button onclick="alert('Downloading ${movie.title}')">Download</button>
-                `;
-                movieList.appendChild(newMovieItem);
-            });
-        }
-
-        function handleDeleteMovie() {
-            // Deleting a movie is not implemented here as it would require server-side support
-            const deleteFile = document.getElementById('delete-file').files[0];
-            if (deleteFile) {
-                alert(`Deleted movie: ${deleteFile.name}`);
-                // Replace with actual file deletion logic
-            } else {
-                alert('Please select a movie file to delete.');
+                showToast('Incorrect username or password.');
             }
         }
 
         function handleLogout() {
             localStorage.removeItem('loggedIn');
-            localStorage.removeItem('movies'); // Clear saved movies on logout
             document.querySelector('.movie-interface').classList.add('hidden');
             document.querySelector('.profile-download-buttons').classList.add('hidden');
             document.querySelector('.login-signup').classList.remove('hidden');
+            showToast('Logged out successfully.');
+        }
+
+        function handleAdminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            const error = document.getElementById('admin-error');
+
+            // Admin credentials check (for demonstration)
+            if (username === 'admin' && password === 'adminpass') {
+                document.querySelector('.admin-dashboard').classList.remove('hidden');
+                hideSection('admin-login');
+            } else {
+                error.textContent = 'Incorrect admin username or password.';
+            }
+        }
+
+        function handleAddMovie() {
+            const title = document.getElementById('movie-title').value;
+            const description = document.getElementById('movie-description').value;
+            const file = document.getElementById('movie-file').files[0];
+            const movieList = document.getElementById('movie-list');
+
+            if (title && description && file) {
+                const movieItem = document.createElement('div');
+                movieItem.classList.add('movie-item');
+                const video = document.createElement('video');
+                video.controls = true;
+                video.src = URL.createObjectURL(file);
+                movieItem.appendChild(video);
+                const movieTitle = document.createElement('h2');
+                movieTitle.textContent = title;
+                movieItem.appendChild(movieTitle);
+                const movieDesc = document.createElement('p');
+                movieDesc.textContent = description;
+                movieItem.appendChild(movieDesc);
+                movieList.appendChild(movieItem);
+
+                showToast('Movie added successfully.');
+                document.getElementById('movie-title').value = '';
+                document.getElementById('movie-description').value = '';
+                document.getElementById('movie-file').value = '';
+            } else {
+                showToast('Please fill out all fields.');
+            }
+        }
+
+        function handleDeleteMovie() {
+            const file = document.getElementById('delete-file').files[0];
+            const movieList = document.getElementById('movie-list');
+
+            if (file) {
+                // Find and remove movie from the list
+                const items = movieList.getElementsByClassName('movie-item');
+                for (let item of items) {
+                    const video = item.querySelector('video');
+                    if (video && video.src === URL.createObjectURL(file)) {
+                        movieList.removeChild(item);
+                        showToast('Movie deleted successfully.');
+                        break;
+                    }
+                }
+                document.getElementById('delete-file').value = '';
+            } else {
+                showToast('Please select a movie to delete.');
+            }
+        }
+
+        function displayMovies() {
+            // Simulate displaying saved movies (if any)
         }
     </script>
 </body>
